@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toggleCardioAction } from "@/app/actions/cardio";
 
 export function CardioToggle({
@@ -12,11 +13,15 @@ export function CardioToggle({
 }) {
   const [checked, setChecked] = useState(initialChecked);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   function handleToggle() {
     const next = !checked;
     setChecked(next);
-    startTransition(() => toggleCardioAction(date, next));
+    startTransition(async () => {
+      await toggleCardioAction(date, next);
+      router.refresh();
+    });
   }
 
   return (

@@ -41,7 +41,9 @@ async function Dashboard() {
 
   const totalCals = summary?.total_cals ?? 0;
   const totalProt = summary?.total_protein ?? 0;
-  const calGoal = summary?.effective_cal_goal ?? currentGoal?.cal_goal ?? 0;
+  const calGoal =
+    summary?.effective_cal_goal ??
+    (currentGoal?.cal_goal ?? 0) + (didCardio ? 300 : 0);
   const protGoal = summary?.prot_goal ?? currentGoal?.prot_goal ?? 0;
 
   const todayWeight =
