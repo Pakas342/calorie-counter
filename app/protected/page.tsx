@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { connection } from "next/server";
+import { connection, cookies } from "next/server";
 import { getDailySummary, getFoodLogsForDay } from "@/lib/services/food";
 import { getWeightStats, getWeightLogs } from "@/lib/services/weight";
 import { getMonthSummary } from "@/lib/services/month";
@@ -23,14 +23,10 @@ export default function ProtectedPage() {
 
 async function Dashboard() {
   await connection();
+  const tz = (await cookies()).get("tz")?.value ?? "UTC";
   const now = new Date();
-  const today = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-  ].join("-");
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: tz }).format(now);
+  const [year, month] = today.split("-").map(Number);
 
   const [summary, foodLogs, weightStats, weightLogs, monthData, currentGoal, didCardio] =
     await Promise.all([
@@ -53,11 +49,12 @@ async function Dashboard() {
   const todayWeight =
     weightStats.latest_date === today ? weightStats.latest_weight : null;
 
-  const dateLabel = now.toLocaleDateString("en-GB", {
+  const dateLabel = new Intl.DateTimeFormat("en-GB", {
+    timeZone: tz,
     weekday: "long",
     day: "numeric",
     month: "long",
-  });
+  }).format(now);
 
   return (
     <div className="flex flex-col gap-6">
@@ -97,7 +94,7 @@ async function Dashboard() {
 
         <div className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">
-            {now.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
+            {new Intl.DateTimeFormat("en-GB", { timeZone: tz, month: "long", year: "numeric" }).format(now)}
           </h2>
           <MonthView data={monthData} year={year} month={month} />
         </div>
