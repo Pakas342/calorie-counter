@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { connection, cookies } from "next/server";
+import { connection } from "next/server";
+import { cookies } from "next/headers";
 import { getDailySummary, getFoodLogsForDay } from "@/lib/services/food";
 import { getWeightStats, getWeightLogs } from "@/lib/services/weight";
 import { getMonthSummary } from "@/lib/services/month";
