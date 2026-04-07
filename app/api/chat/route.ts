@@ -56,10 +56,10 @@ export async function POST(request: NextRequest) {
   }
 
   const response = await anthropic.messages.create({
-    model: "claude-haiku-4-5-20251001",
+    model: "claude-sonnet-4-6",
     max_tokens: 1024,
     system:
-      "You are a nutrition tracker. The user (Australia/SYD) will describe what they ate. Parse each distinct food item and estimate its calories (Kcal) and protein (grams). Be practical — use realistic portion sizes if not specified. If in doubt about cooking method, assume the calories higher end",
+      "You are a nutrition tracker. The user (Australia/SYD) will describe what they ate. Parse each distinct food item and estimate its calories (Kcal) and protein (grams). Be practical — use realistic portion sizes if not specified. If in doubt about soemthing, assume more calories",
     tools: [FOOD_LOG_TOOL],
     tool_choice: { type: "tool", name: "log_food" },
     messages: [{ role: "user", content: message }],
